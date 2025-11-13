@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sleek Black & Red Website</title>
+  <style>
+    :root {
+      --bg-color: #0a0a0a;
+      --accent-color: #e50914;
+      --text-color: #f5f5f5;
+      --secondary-color: #111;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      overflow-x: hidden;
+    }
+
+    /* ----------- Header ----------- */
+    header {
+      background: linear-gradient(to right, #000, #1a0000);
+      padding: 25px 0;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid #222;
+      box-shadow: 0 2px 8px rgba(255, 0, 0, 0.1);
+      transition: box-shadow 0.3s ease;
+    }
+
+    header:hover {
+      box-shadow: 0 2px 15px rgba(229, 9, 20, 0.3);
+    }
+
+    header h1 {
+      color: var(--accent-color);
+      font-size: 2rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      transition: transform 0.3s ease;
+    }
+
+    header h1:hover {
+      transform: scale(1.05);
+    }
+
+    /* ----------- Navigation ----------- */
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+      transition: color 0.3s ease, transform 0.3s ease;
+      padding: 5px 0;
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -4px;
+      width: 0;
+      height: 2px;
+      background: var(--accent-color);
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover {
+      color: var(--accent-color);
+      transform: translateY(-2px);
+    }
+
+    nav a:hover::after,
+    nav a.active::after {
+      width: 100%;
+    }
+
+    nav a.active {
+      color: var(--accent-color);
+    }
+
+    /* ----------- Hero Section ----------- */
+    .hero {
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: radial-gradient(circle at top, #1a0000, #000);
+      animation: fadeIn 1.5s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .hero:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 25px rgba(229, 9, 20, 0.2);
+    }
+
+    .hero h2 {
+      font-size: 3rem;
+      color: var(--accent-color);
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      max-width: 600px;
+      color: #ccc;
+    }
+
+    .hero button {
+      margin-top: 25px;
+      padding: 12px 30px;
+      font-size: 1rem;
+      background: var(--accent-color);
+      border: none;
+      color: var(--text-color);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .hero button:hover {
+      background: #fff;
+      color: #000;
+      transform: translateY(-3px);
+    }
+
+    /* ----------- Content Sections ----------- */
+    section {
+      padding: 100px 10%;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s ease-out;
+    }
+
+    section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    section:hover {
+      background: rgba(229, 9, 20, 0.05);
+      box-shadow: 0 0 25px rgba(229, 9, 20, 0.1);
+      transition: background 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    section h2 {
+      color: var(--accent-color);
+      font-size: 2rem;
+      margin-bottom: 20px;
+      position: relative;
+      display: inline-block;
+    }
+
+    section h2::after {
+      content: "";
+      display: block;
+      margin: 10px auto 0;
+      width: 60px;
+      height: 3px;
+      background: var(--accent-color);
+      transition: width 0.3s ease;
+    }
+
+    section:hover h2::after {
+      width: 100px;
+    }
+
+    section p {
+      max-width: 700px;
+      margin: 0 auto;
+      color: #bbb;
+      font-size: 1.1rem;
+      line-height: 1.8;
+    }
+
+    /* ----------- Footer ----------- */
+    footer {
+      background: #080808;
+      text-align: center;
+      padding: 30px;
+      border-top: 1px solid #222;
+      color: #888;
+      font-size: 0.9rem;
+      transition: color 0.3s ease;
+    }
+
+    footer:hover {
+      color: var(--accent-color);
+    }
+
+    /* ----------- Animation ----------- */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1> TLCI Tracking</h1>
+    <nav>
+      <a href="#home" class="active">Tracking</a>
+      <a href="#contact">FedEx Label</a>
+    </nav>
+  </header>
+
+  <section id="home" class="hero">
+    <h2>Tracking</h2>
+    <p>Welcome to Brendan's Website where he figures out Trackonomy and FedEx API</p>
+    <button>Get Started</button>
+  </section>
+
+
+
+  <section id="contact">
+    <h2>FedEx <Label></Label></h2>
+    <p>
+      This is where the contact information should go — or connect to the FedEx tracking API.
+    </p>
+  </section>
+
+  <footer>
+    &copy; 2025 RedEdge — Designed with ❤️ and precision.
+  </footer>
+
+  <script>
+    // Scroll reveal for sections
+    const sections = document.querySelectorAll("section");
+    const navLinks = document.querySelectorAll("nav a");
+
+    const revealOnScroll = () => {
+      const triggerBottom = window.innerHeight * 0.85;
+      let current = "";
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top < triggerBottom) section.classList.add("visible");
+        const sectionTop = section.offsetTop - 100;
+        if (scrollY >= sectionTop) current = section.getAttribute("id");
+      });
+
+      // Highlight active nav link
+      navLinks.forEach(link => {
+        link.classList.remove("active");
+        if (link.getAttribute("href") === `#${current}`) {
+          link.classList.add("active");
+        }
+      });
+    };
+
+    window.addEventListener("scroll", revealOnScroll);
+    revealOnScroll();
+  </script>
+</body>
+</html>
