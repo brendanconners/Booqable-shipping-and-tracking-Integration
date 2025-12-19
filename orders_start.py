@@ -53,17 +53,18 @@ rows = []
 for o in all_orders:
     attributes = o.get("attributes", {})
     row = {
-        'order_number': o.get('number'),
-        'customer_id': o.get('customer_id'),
-        'item_count': o.get('item_count'),
-        'properties': o.get('properties'),
+        'order_number': attributes.get('number'),
+        'customer_id': attributes.get('customer_id'),
+        'item_count': attributes.get('item_count'),
+        'properties': attributes.get('properties'),
 
     }
     rows.append(row)
     #print(rows)
 
     orders_df = pd.DataFrame(rows)
-   # print(orders_df.head())
+    orders_df.to_csv('orders_list.csv')
+    print(orders_df.head())
 
 #----------------------------------------
 
@@ -72,3 +73,38 @@ for o in all_orders:
 #--------------------------------------- 
 
 customer_url = "https://quora-legal.booqable.com/api/4/customers"
+
+HEADERS = {
+    "Authorization": f"Bearer {API_KEY}",
+    "Accept": "application/json"
+}
+
+customers_list = []
+
+while True:
+    params = {
+        "page[number]": page_number,
+        "page[size]": page_size
+    }
+    response = requests.get(customer_url, headers=HEADERS, params=params)
+    if response.status_code != 200:
+        print(f"Error fetching customers: {response.status_code}")
+        print(response.text)
+        break
+
+    data = response.json()
+    customers = data.get("data", [])
+    if not customers:
+        break
+
+    customers_list.extend(customers)
+
+    # Pagination
+    meta = data.get("meta", {}).get("page", {})
+    total_pages = meta.get("total_pages", 1)
+    if page_number >= total_pages:
+        break
+    page_number += 1
+
+print(f"✅ Total customers fetched: {len(customers_list)}")
+print(customers_list)
