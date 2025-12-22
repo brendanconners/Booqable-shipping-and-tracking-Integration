@@ -127,4 +127,32 @@ plannings_items =plannings_df['item_id']
 print(plannings_items.head())
 plannings_df.to_csv("practice_orders.csv", index=False)
 
+# Item API Call 
+all_items = []
+while True:
+    params = {
+        "page[number]": page_number,
+        "page[size]": page_size
+    }
+    response = requests.get(BASE_URL_ITEMS, headers=HEADERS, params=params)
+    if response.status_code != 200:
+        print(f"Error fetching items: {response.status_code}")
+        print(response.text)
+        break
+
+    data = response.json()
+    items = data.get("data", [])
+    if not items:
+        break
+
+    all_items.extend(items)
+
+    # Pagination
+    meta = data.get("meta", {}).get("page", {})
+    total_pages = meta.get("total_pages", 1)
+    if page_number >= total_pages:
+        break
+    page_number += 1
+
+print(f"Total items fetched: {len(all_items)}")
 

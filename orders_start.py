@@ -52,6 +52,10 @@ rows = []
 
 for o in all_orders:
     attributes = o.get("attributes", {})
+    order_id = o.get('id')
+    plannings_url = o.get('relationships', {}).get('plannings', {}).get('links', {}).get('related')
+    plannings = []
+    
     row = {
         'order_number': attributes.get('number'),
         'customer_id': attributes.get('customer_id'),
