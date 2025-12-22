@@ -4,6 +4,7 @@ import pandas as pd
 API_KEY = "7c88004786ef273d44e157c4e179d854689beb4246f9008b898f607930a29bc4"
 BASE_URL_ORDERS = "https://quora-legal.booqable.com/api/4/orders"
 BASE_URL_PLANNINGS = "https://quora-legal.booqable.com/api/4/plannings"
+BASE_URL_ITEMS = "https://quora-legal.booqable.com/api/4/items"
 HEADERS = {
     "Authorization": f"Bearer {API_KEY}",
     "Accept": "application/json"
@@ -41,10 +42,10 @@ while True:
         break
     page_number += 1
 
-print(f"✅ Total orders fetched: {len(all_orders)}")
+print(f"Total orders fetched: {len(all_orders)}")
 
 # -------------------------
-# FETCH FULL PLANNINGS FOR EACH ORDER USING FILTER
+# FETCH FULL PLANNINGS FOR EACH ORDER
 # -------------------------
 planning_rows = []
 
@@ -53,7 +54,7 @@ for o in all_orders:
     order_number = o.get("attributes", {}).get("number")
     customer_id = o.get("attributes", {}).get("customer_id")
 
-    # Fetch all plannings for this order
+    # Fetch all plannings for this order using filter
     params = {
         "filter[order_id]": order_id,
         "include": "order,item,nested_plannings,start_location,stop_location"
@@ -71,24 +72,27 @@ for o in all_orders:
         attrs = p.get("attributes", {})
         rels = p.get("relationships", {})
 
-        item = rels.get("item", {}).get("data", {})
+        # Extract order_number from included order relationship
+        order_data = rels.get("order", {}).get("data", {})
+        order_num_included = order_data.get("attributes", {}).get("number") if order_data else order_number
+
+        # Extract item_name from included item relationship
+        item_data = rels.get("item", {}).get("data", {})
+        item_name = item_data.get("attributes", {}).get("name") if item_data else None
+
+        item_id = item_data.get("id") if item_data else None
+        item_type = item_data.get("type") if item_data else None
+
         # Add main planning
         planning_rows.append({
-            "order_number": order_number,
+            "order_number": order_num_included,
             "customer_id": customer_id,
             "planning_id": planning_id,
             "parent_planning_id": attrs.get("parent_planning_id"),
-            "item_id": item.get("id") if item else None,
-            "item_type": item.get("type") if item else None,
+            "item_id": item_id,
+            "item_type": item_type,
+            "item_name": item_name,
             "quantity": attrs.get("quantity"),
-            "status": attrs.get("status"),
-            "planning_type": attrs.get("planning_type"),
-            "starts_at": attrs.get("starts_at"),
-            "stops_at": attrs.get("stops_at"),
-            "reserved_from": attrs.get("reserved_from"),
-            "reserved_till": attrs.get("reserved_till"),
-            "start_location": attrs.get("start_location_id"),
-            "stop_location": attrs.get("stop_location_id")
         })
 
         # Add nested plannings if any
@@ -97,29 +101,30 @@ for o in all_orders:
             np_id = np.get("id")
             np_attrs = np.get("attributes", {})
             np_item = np.get("relationships", {}).get("item", {}).get("data", {})
+
+            np_item_name = np_item.get("attributes", {}).get("name") if np_item else None
+            np_item_id = np_item.get("id") if np_item else None
+            np_item_type = np_item.get("type") if np_item else None
+
             planning_rows.append({
-                "order_number": order_number,
+                "order_number": order_num_included,
                 "customer_id": customer_id,
                 "planning_id": np_id,
                 "parent_planning_id": np_attrs.get("parent_planning_id"),
-                "item_id": np_item.get("id") if np_item else None,
-                "item_type": np_item.get("type") if np_item else None,
+                "item_id": np_item_id,
+                "item_type": np_item_type,
+                "item_name": np_item_name,
                 "quantity": np_attrs.get("quantity"),
                 "status": np_attrs.get("status"),
-                "planning_type": np_attrs.get("planning_type"),
-                "starts_at": np_attrs.get("starts_at"),
-                "stops_at": np_attrs.get("stops_at"),
-                "reserved_from": np_attrs.get("reserved_from"),
-                "reserved_till": np_attrs.get("reserved_till"),
-                "start_location": np_attrs.get("start_location_id"),
-                "stop_location": np_attrs.get("stop_location_id")
+
             })
 
 # -------------------------
 # SAVE TO CSV
 # -------------------------
 plannings_df = pd.DataFrame(planning_rows)
+plannings_items =plannings_df['item_id']
+print(plannings_items.head())
 plannings_df.to_csv("practice_orders.csv", index=False)
-print("✅ Orders and full plannings saved to 'orders_full_plannings_filtered.csv'")
-print(plannings_df.head())
+
 
