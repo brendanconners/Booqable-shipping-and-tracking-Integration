@@ -128,19 +128,20 @@ def get_email(y):
 customers_listdf['name'] = customers_listdf['attributes'].apply(get_name)
 customers_listdf['email'] = customers_listdf['attributes'].apply(get_email)
 
-print(customers_listdf)
+#print(customers_listdf)
 
-customers_listdf.head()
+#customers_listdf.head()
 
-#customers_listdf.to_csv('Customer_list.csv')
 #Merging Orders and Customer List Dataframe
-"""
+
 merged_df = orders_df.merge(
     customers_listdf,
     left_on='customer_id',
     right_on='id',
-    how='left'
+    how='inner'
 )
+(merged_df['customer_id'] == merged_df['id']).all()
+merged_df = merged_df.drop(columns=['id','type',])
+
 
 merged_df.to_csv('Merged_list.csv')
-"""
