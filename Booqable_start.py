@@ -122,6 +122,11 @@ barcodes_df.to_csv('barcodes.dataframe.csv')
 #Booqable exported Inventory (reads as Products)
 
 inventory_export = pd.read_csv('Booqable/products-export-2025-11-12.csv')
+
+print(inventory_export)
+
+# Cleaning up the CSV File
+"""
 inventory_export.drop(['taxable', 'price_ruleset', 'tax_category','base_price','base_price_as_decimal','base_price_in_cents','deposit','deposit_as_decimal',
                        'deposit_in_cents'], axis=1, inplace=True)
 print(inventory_export)
@@ -130,3 +135,5 @@ print(inventory_export)
 f =open(exported_products_filename, "w+")
 inventory_export.to_csv(exported_products_filename)
 f.close
+"""
+
