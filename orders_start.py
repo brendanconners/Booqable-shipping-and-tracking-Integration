@@ -1,6 +1,6 @@
 import requests
 import pandas as pd
-
+import ast
 # -------------------------
 # CONFIG
 # -------------------------
@@ -106,5 +106,15 @@ while True:
         break
     page_number += 1
 
-print(f"✅ Total customers fetched: {len(customers_list)}")
-print(customers_list)
+print(f" Total customers fetched: {len(customers_list)}")
+#print(customers_list)
+customers_listdf = pd.DataFrame(customers_list)
+print(customers_listdf)
+
+#lamda function to get the name attributes out of the orders dataframe: 
+customers_listdf['name'] = customers_listdf['attributes'].apply(
+    lambda x: ast.literal_eval(x).get('name')
+)
+
+print(customers_listdf['name'])
+#customers_listdf.to_csv('Customer_list.csv')
