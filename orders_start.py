@@ -109,12 +109,38 @@ while True:
 print(f" Total customers fetched: {len(customers_list)}")
 #print(customers_list)
 customers_listdf = pd.DataFrame(customers_list)
-print(customers_listdf)
 
 #lamda function to get the name attributes out of the orders dataframe: 
-customers_listdf['name'] = customers_listdf['attributes'].apply(
-    lambda x: ast.literal_eval(x).get('name')
+
+def get_name(x):
+    if isinstance(x, dict):
+        return x.get('name')
+    if isinstance(x, str):
+        return ast.literal_eval(x).get('name')
+    return None
+def get_email(y):
+    if isinstance(y,dict):
+        return y.get('email')
+    if isinstance(y,str):
+        return ast.literal_eval(y).get('email')
+    return None
+
+customers_listdf['name'] = customers_listdf['attributes'].apply(get_name)
+customers_listdf['email'] = customers_listdf['attributes'].apply(get_email)
+
+print(customers_listdf)
+
+customers_listdf.head()
+
+#customers_listdf.to_csv('Customer_list.csv')
+#Merging Orders and Customer List Dataframe
+"""
+merged_df = orders_df.merge(
+    customers_listdf,
+    left_on='customer_id',
+    right_on='id',
+    how='left'
 )
 
-print(customers_listdf['name'])
-#customers_listdf.to_csv('Customer_list.csv')
+merged_df.to_csv('Merged_list.csv')
+"""
